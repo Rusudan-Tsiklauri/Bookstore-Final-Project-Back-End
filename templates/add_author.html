@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %} add_author {% endblock %}
+
+{% block container %}
+<div class="row mt-2">
+    <form class="col-6 offset-3 my-2" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        {% for error in form.errors.values() %}
+            {{ error }} <br>
+        {% endfor %}
+
+        <div class="row mt-2">
+
+        <div class="row mt-2">
+           {{ form.image.label }} {{ form.image(class="form-control", accept=".jpg, .png, .jpeg") }}
+        </div>
+        </div>
+
+        <div class="row mt-2">
+            {{ form.name(class="form-control", placeholder=form.name.label.text ) }}
+        </div>
+        <div class="row mt-2">
+            {{ form.bio(class="form-control", placeholder=form.bio.label.text) }}
+        </div>
+        <div  class="row mt-2">
+            {{ form.submit(class="btn btn-primary w-100")}}
+        </div>
+    </form>
+</div>
+{% endblock %}

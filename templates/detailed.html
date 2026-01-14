@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title%}  Detailed {% endblock %}
+
+ {% block container %}
+
+<div class="container mt-5">
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <img src="/static/images/{{ product.image }}"
+                 class="img-fluid rounded shadow"
+                 style="max-height: 600px; width: 100%; object-fit: contain; display: block;"
+                 alt="{{ product.name }}">
+        </div>
+        <div class="col-md-8">
+            <div class="ps-md-4">
+                <h2 class="display-6"><b>{{ product.name }}</b></h2>
+                <p class="text-muted mb-1">ავტორი: {{ product.author }}</p>
+                <span class="badge bg-info text-dark mb-3">{{ product.genre }}</span>
+                <hr>
+                <h3 class="text-primary">{{ product.price }} ₾</h3>
+                <div class="mt-4">
+                    <h5><b>აღწერა:</b></h5>
+                    <p>{{ product.description }}</p>
+                </div>
+                 <div class="mt-4">
+                    <h5><b>მიტანის ღირებულება:</b></h5>
+                    <p>თბილისი - 5 ლარი / რეგიონი - 7.00 ლარი</p>
+                     <p> თბილისი: 2-3 სამუშაო დღე</p>
+                    <p>რეგიონები: 4-5 სამუშაო დღე</p>
+                </div>
+                <div class="container mt-5">
+                    <h3>შეფასებები</h3>
+                    {% if current_user.is_authenticated %}
+                    <form action="/add_review/{{ product.id }}" method="POST" class="mb-4">
+                        <div class="mb-3">
+                            <label class="form-label">შეფასება (1-5):</label>
+                            <input type="number" name="rating" min="1" max="5" class="form-control" style="width: 80px;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">თქვენი აზრი:</label>
+                            <textarea name="content" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">გაგზავნა</button>
+                    </form>
+                    {% else %}
+                    <p><a href="/login">შედით სისტემაში</a> კომენტარის დასატოვებლად</p>
+                    {% endif %}
+                    <hr>
+                    <div class="reviews-list">
+                        {% for review in product.reviews %}
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h6 class="card-title"> </h6>
+                                    <strong>{{ review.user.username }}</strong>
+                                    <div class="text-warning">
+                                        {% for star in range(review.rating) %} ★ {% endfor %}
+                                    </div>
+                                <p class="card-text">{{ review.content }}</p>
+                                <div class="text-muted">{{ review.date_added.strftime('%Y-%m-%d') }}</div>
+                                 {% if current_user.is_authenticated and (review.user_id == current_user.id) %}
+                                <form action="/delete_review/{{ review.id }}" method="POST" style="display:inline;">
+                                    <button type="submit" style="color: white; background-color: red; border: none; padding: 5px 10px; cursor: pointer;" onclick="return confirm('ნამდვილად გსურთ წაშლა?')">
+                                        წაშლა
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mt-5 d-flex align-items-center gap-2">
+                     <a href="/" class="btn btn-secondary">უკან დაბრუნება</a>
+                    <form action="/add_to_cart/{{ product.id }}" method="post" class="m-0">
+                        <input type="hidden" name="item_id" value="{{ product.id }}">
+                        <button type="submit" class="btn btn-dark">
+                            <i class="bi bi-cart-plus"></i>კალათაში დამატება🛒
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,33 @@
+]{% extends "base.html" %}
+{% block title %} genre {{ genre }} {% endblock %}
+
+{% block container %}
+<div class="container mt-5">
+    <h2 class="mb-4">{{ genre }}</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="/static/images/{{ product.image }}" class="card-img-top" style="height: 300px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text text-muted">{{ product.author }}</p>
+                    <div class="d-grid gap-2 mt-auto">
+                        {% if current_user.is_authenticated %}
+                        <form action="/add_to_cart/{{ product.id }}" method="post" class="m-0">
+                            <input type="hidden" name="item_id" value="{{ product.id }}">
+                            <button type="submit" class="btn btn-info w-100">
+                                <i class="bi bi-cart-plus"></i>კალათაში დამატება🛒
+                            </button>
+                        </form>
+                        {% endif %}
+                        <a href="/detailed/{{ product.id }}" class="btn btn-primary">დეტალურად</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <a href="/" class="btn btn-secondary">მთავარ გვერძე დაბრუნება</a>
+</div>
+{% endblock %}

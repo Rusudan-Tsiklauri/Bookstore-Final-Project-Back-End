@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %} Confrim Order {% endblock %}
+
+{% block container %}
+<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
+    <h2>შეკვეთის დასრულება</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <form action="/confirm_order" method="POST" class="card p-4 shadow-sm">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    <label class="form-label">სახელი</label>
+                    {{ form.name(class="form-control") }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">მისამართი</label>
+                    {{ form.address(class="form-control") }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">ტელეფონი</label>
+                    {{ form.phone(class="form-control") }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">შეკვეთის დადასტურება</button>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 bg-light">
+                <h5>შენი კალათა</h5>
+                <hr>
+                <p>ნივთების რაოდენობა: {{ products|length }}</p>
+                <h4>ჯამი: {{ "%.2f"|format(total) }} ₾</h4>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
