@@ -279,6 +279,45 @@ def add_author():
 
 
 
+@app.route("/delete_author/<int:author_id>")
+@login_required
+def delete_author(author_id):
+    author = Author.query.get(author_id)
+
+    db.session.delete(author)
+    db.session.commit()
+
+    flash("ავტორი წარმატებით წაიშალა", "danger")
+    return redirect("/")
+
+
+
+
+@app.route("/edit_author/<int:author_id>", methods=["POST", "GET"])
+@login_required
+def edit_author(author_id):
+    author = Author.query.get(author_id)
+    form = AuthorForm(name=author.name, bio=author.bio)
+
+    if form.validate_on_submit():
+        author.name = form.name.data
+        author.bio = form.bio.data
+
+        if form.image.data:
+            image_file = form.image.data
+            filename = image_file.filename
+            image_file.save(f"static/images/{filename}")
+            author.image = filename
+
+        db.session.commit()
+
+        flash("ავტორი წარმატებით განახლდა!", "success")
+        return redirect("/")
+
+    return render_template("add_author.html", form=form)
+
+
+
 
 
 @app.route("/search")
@@ -357,5 +396,6 @@ def profile():
             return redirect("/profile")
         else:
             flash("ძველი პაროლი არასწორია!", "danger")
+
 
     return render_template("profile.html", form=form)
